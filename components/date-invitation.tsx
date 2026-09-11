@@ -71,7 +71,7 @@ const copy = {
     record: "Here’s our little plan, officially on the record.", date: "Date", time: "Time", backup: "Backup moments",
     plans: "Our plans", food: "Food shortlist", final: "I can’t wait to see you.", restart: "Make another reservation",
     sendAnswers: "All picked! ❤", sending: "Saving our little plan…", sent: "All set! Your date plan is saved 💌",
-    sendFailed: "It didn’t send. Please try again.", finalSub: "Your choices are saved and your little date plan is on its way. 💌", finalClose: "See you soon ❤", made: "Made with a suspicious amount of courage", am: "AM", pm: "PM",
+    sendFailed: "It didn’t send. Please try again.", previewBadge: "Creator preview · Answers will not be recorded", previewFinish: "Finish preview—back to results", finalSub: "Your choices are saved and your little date plan is on its way. 💌", finalClose: "See you soon ❤", made: "Made with a suspicious amount of courage", am: "AM", pm: "PM",
   },
   zh: {
     back: "返回", tinyQuestion: "有一个小问题想问你", homeSub: "装作不在意，其实很期待", yes: "愿意",
@@ -87,7 +87,7 @@ const copy = {
     record: "这是我们说好的约会计划。", date: "日期", time: "时间", backup: "其他见面时间",
     plans: "约会安排", food: "想吃的东西", final: "想快点见到你！", restart: "再预约一次",
     sendAnswers: "我选好啦 ❤", sending: "正在保存我们的约会计划…", sent: "选好啦！约会计划已经保存 💌",
-    sendFailed: "没有发送成功，请再试一次。", finalSub: "你的选择已经保存好，约会计划也悄悄送达啦。💌", finalClose: "好呀 ❤", made: "鼓起了很多勇气才做出来", am: "上午", pm: "下午",
+    sendFailed: "没有发送成功，请再试一次。", previewBadge: "创建者预览模式 · 答案不会被记录", previewFinish: "预览完成，返回结果页", finalSub: "你的选择已经保存好，约会计划也悄悄送达啦。💌", finalClose: "好呀 ❤", made: "鼓起了很多勇气才做出来", am: "上午", pm: "下午",
   },
 };
 
@@ -102,12 +102,13 @@ function ChoiceCard({ emoji, label, displayLabel, selected, onToggle }: { emoji?
   );
 }
 
-export default function DateInvitation({ invitationCode, creatorName, crushName, personalNote, initialLanguage = "zh" }: {
+export default function DateInvitation({ invitationCode, creatorName, crushName, personalNote, initialLanguage = "zh", initialPreview = false }: {
   invitationCode: string;
   creatorName: string;
   crushName: string;
   personalNote?: string | null;
   initialLanguage?: "en" | "zh";
+  initialPreview?: boolean;
 }) {
   const today = new Date();
   const [language, setLanguage] = useState<"en" | "zh">(initialLanguage);
@@ -126,6 +127,7 @@ export default function DateInvitation({ invitationCode, creatorName, crushName,
   const [sendStatus, setSendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [showFinal, setShowFinal] = useState(false);
   const [creatorManageUrl, setCreatorManageUrl] = useState("");
+  const [previewMode, setPreviewMode] = useState(initialPreview);
   const t = copy[language];
 
   const daysInMonth = useMemo(() => new Date(Number(year), Number(month), 0).getDate(), [month, year]);
@@ -145,6 +147,10 @@ export default function DateInvitation({ invitationCode, creatorName, crushName,
   const canContinue = step === 3 ? times.length > 0 : step === 4 ? selectedActivities.length > 0 : step === 5 ? selectedFoods.length > 0 : true;
 
   const sendAnswers = async () => {
+    if (previewMode) {
+      if (creatorManageUrl) window.location.assign(creatorManageUrl);
+      return;
+    }
     if (sendStatus === "sending" || sendStatus === "sent") return;
     setSendStatus("sending");
     try {
@@ -175,7 +181,9 @@ export default function DateInvitation({ invitationCode, creatorName, crushName,
   }, [language]);
 
   useEffect(() => {
-    setCreatorManageUrl(window.localStorage.getItem(`date-invite-manage:${invitationCode}`) || "");
+    const manageUrl = window.localStorage.getItem(`date-invite-manage:${invitationCode}`) || "";
+    setCreatorManageUrl(manageUrl);
+    if (manageUrl) setPreviewMode(true);
   }, [invitationCode]);
 
   useEffect(() => {
@@ -223,6 +231,7 @@ export default function DateInvitation({ invitationCode, creatorName, crushName,
       <div className="floating-heart heart-one">♥</div><div className="floating-heart heart-two">♥</div><div className="floating-heart heart-three">♥</div>
       <section className="invitation-card" aria-labelledby="page-title">
         {creatorManageUrl && <a className="creator-return-button" href={creatorManageUrl}><ArrowLeft className="h-4 w-4" /> {language === "zh" ? "返回我的结果页" : "Back to my results"}</a>}
+        {previewMode && <div className="preview-mode-badge">{t.previewBadge}</div>}
         <button className="language-toggle" onClick={() => setLanguage(language === "en" ? "zh" : "en")} aria-label={language === "en" ? "切换到中文" : "Switch to English"}>
           <Languages className="h-4 w-4" /><span className={language === "zh" ? "active-language" : ""}>中文</span><i>/</i><span className={language === "en" ? "active-language" : ""}>EN</span>
         </button>
@@ -282,7 +291,7 @@ export default function DateInvitation({ invitationCode, creatorName, crushName,
           <span className="eyebrow"><Check className="h-4 w-4" /> {t.confirmed}</span><h1 id="page-title">{language === "zh" ? pageTitlesZh[step] : pageTitles[step]}</h1><p className="subtitle">{t.record}</p>
           <div className="summary-card"><div><span>{t.date}</span><strong>{selectedDate}</strong></div><div><span>{t.time}</span><strong>{hour}:{minute} {period === "AM" ? t.am : t.pm}</strong></div><div><span>{t.backup}</span><strong>{times.map(value => language === "zh" ? timeZh[value] : value).join(" · ")}</strong></div><div><span>{t.plans}</span><strong>{selectedActivities.map(value => language === "zh" ? activityZh[value] : value).join(" · ")}</strong></div><div><span>{t.food}</span><strong>{selectedFoods.map(value => language === "zh" ? foodZh[value] : value).join(" · ")}</strong></div></div>
           <Button className="primary-button submit-choice-button" size="lg" disabled={sendStatus === "sending" || sendStatus === "sent"} onClick={sendAnswers}>
-            {sendStatus === "sending" ? t.sending : sendStatus === "sent" ? t.sent : t.sendAnswers}
+            {previewMode ? t.previewFinish : sendStatus === "sending" ? t.sending : sendStatus === "sent" ? t.sent : t.sendAnswers}
           </Button>
           {sendStatus === "error" && <p className="tiny-note">{t.sendFailed}</p>}
           {sendStatus !== "sent" && <button className="start-over" onClick={()=>{ setSendStatus("idle"); setShowFinal(false); setStep(0); }}>{t.restart}</button>}

@@ -1,14 +1,16 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { Check, Copy, Heart, Languages, Mail, Send, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, Check, Copy, Heart, Languages, Mail, Send, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type Language = "zh" | "en";
-type Stage = "details" | "verify" | "ready";
+type Stage = "cover" | "details" | "verify" | "ready";
 
 const text = {
   zh: {
+    coverEyebrow: "一个很可爱的约会邀请生成器", coverTitle: "把想约 TA 的心意，做成一条链接", coverBody: "填写你和 TA 的名字，再留下你的邮箱。我们会生成一条专属邀请链接；TA 选好日期、活动和美食后，完整答案只会发给你。", coverCta: "开始制作邀请", noAccount: "无需注册账号，只需验证邮箱", howOne: "填写邀请", howTwo: "把链接发给 TA", howThree: "在邮箱收到答案",
     eyebrow: "别犹豫，勇敢追爱！", title: "创建你的约会邀请", subtitle: "填好信息，获得一条只属于你们的链接。对方提交后，完整答案会自动发到你的邮箱。",
     creator: "你的名字", creatorPlaceholder: "比如：Herman", crush: "TA 的名字", crushPlaceholder: "比如：小可爱", email: "你的邮箱", emailHint: "验证码、邀请链接和最终报告都会发到这里。",
     note: "想对 TA 说的话（选填）", notePlaceholder: "悄悄写一句只给 TA 看的话…", sendCode: "发送验证码", sending: "正在发送…",
@@ -16,6 +18,7 @@ const text = {
     ready: "邀请已经准备好啦！", readyBody: "先复制下面的邀请链接发给 TA，发完再回来进入你的私密结果页。", invite: "第一步 · 复制给 TA 的邀请链接", copy: "复制邀请链接", copied: "已复制，可以发给 TA 啦", preview: "先自己预览一下", goResults: "我已经发给 TA，进入我的结果页", resultsHint: "复制邀请链接后，就可以安全进入自己的结果页。", again: "再创建一个",
   },
   en: {
+    coverEyebrow: "A very cute date invitation maker", coverTitle: "Turn your feelings into one little link", coverBody: "Add your names and email to create a private invitation. Your date chooses the time, activities, and food—and their full answer goes only to you.", coverCta: "Create an invitation", noAccount: "No account or password—just verify your email", howOne: "Make it yours", howTwo: "Send them the link", howThree: "Get their answer",
     eyebrow: "A little courage goes a long way", title: "Create your date invitation", subtitle: "Make a private link for someone special. Their answers will be saved and emailed directly to you.",
     creator: "Your name", creatorPlaceholder: "e.g. Herman", crush: "Their name", crushPlaceholder: "e.g. Cutie", email: "Your email", emailHint: "Your code, links, and final report will be sent here.",
     note: "A note for them (optional)", notePlaceholder: "Write something only they will see…", sendCode: "Send verification code", sending: "Sending…",
@@ -26,7 +29,7 @@ const text = {
 
 export default function CreatorPage() {
   const [language, setLanguage] = useState<Language>("zh");
-  const [stage, setStage] = useState<Stage>("details");
+  const [stage, setStage] = useState<Stage>("cover");
   const [form, setForm] = useState({ creatorName: "", crushName: "", email: "", personalNote: "", code: "" });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -68,13 +71,14 @@ export default function CreatorPage() {
   return <main className="app-shell creator-shell"><div className="floating-heart heart-one">♥</div><div className="floating-heart heart-two">♥</div>
     <section className="invitation-card creator-card">
       <button className="language-toggle" onClick={() => setLanguage(language === "zh" ? "en" : "zh")}><Languages className="h-4 w-4"/><span className={language === "zh" ? "active-language" : ""}>中文</span><i>/</i><span className={language === "en" ? "active-language" : ""}>EN</span></button>
+      {stage === "cover" && <div className="creator-cover"><div className="creator-cover-copy"><span className="eyebrow"><Sparkles className="h-4 w-4"/> {t.coverEyebrow}</span><h1>{t.coverTitle}</h1><p className="subtitle">{t.coverBody}</p><Button className="primary-button cover-cta" size="lg" onClick={()=>setStage("details")}>{t.coverCta} <ArrowRight className="h-4 w-4"/></Button><p className="cover-safe-note">✓ {t.noAccount}</p></div><div className="cover-visual"><span className="love-orbit">♥</span><Image src="/love-bear.png" alt="A cute bear holding a red heart" width={410} height={410} priority/></div><div className="cover-steps"><div><strong>01</strong><span>{t.howOne}</span></div><div><strong>02</strong><span>{t.howTwo}</span></div><div><strong>03</strong><span>{t.howThree}</span></div></div></div>}
       {stage === "details" && <><span className="eyebrow"><Sparkles className="h-4 w-4"/> {t.eyebrow}</span><h1>{t.title}</h1><p className="subtitle creator-subtitle">{t.subtitle}</p>
         <form className="creator-form" onSubmit={requestCode}><div className="form-grid"><label className="form-field"><span>{t.creator}</span><input value={form.creatorName} onChange={(e)=>update("creatorName",e.target.value)} placeholder={t.creatorPlaceholder} maxLength={80}/></label><label className="form-field"><span>{t.crush}</span><input value={form.crushName} onChange={(e)=>update("crushName",e.target.value)} placeholder={t.crushPlaceholder} maxLength={80}/></label></div>
           <label className="form-field"><span>{t.email}</span><input type="email" value={form.email} onChange={(e)=>update("email",e.target.value)} placeholder="you@example.com" autoComplete="email"/><small>{t.emailHint}</small></label>
           <label className="form-field"><span>{t.note}</span><textarea value={form.personalNote} onChange={(e)=>update("personalNote",e.target.value)} placeholder={t.notePlaceholder} maxLength={500} rows={3}/><small>{form.personalNote.length}/500</small></label>
-          {error && <p className="form-error">{error}</p>}<Button className="primary-button creator-submit" size="lg" disabled={busy}>{busy ? t.sending : t.sendCode} <Mail className="h-4 w-4"/></Button>
+          {error && <p className="form-error">{error}</p>}<Button className="primary-button creator-submit" size="lg" disabled={busy}>{busy ? t.sending : t.sendCode} <Mail className="h-4 w-4"/></Button><button type="button" className="text-button form-back" onClick={()=>setStage("cover")}>{language === "zh" ? "返回介绍页" : "Back to introduction"}</button>
         </form></>}
       {stage === "verify" && <div className="stage-panel"><div className="mail-orbit">💌</div><span className="eyebrow"><Mail className="h-4 w-4"/> {form.email}</span><h1>{t.verifyTitle}</h1><p className="subtitle">{t.verifyBody}</p><form className="creator-form verify-form" onSubmit={createInvitation}><label className="form-field"><span>{t.code}</span><input className="code-input" inputMode="numeric" autoComplete="one-time-code" value={form.code} onChange={(e)=>update("code",e.target.value.replace(/\D/g,"").slice(0,6))} placeholder="••••••" maxLength={6}/></label>{error && <p className="form-error">{error}</p>}<Button className="primary-button creator-submit" size="lg" disabled={busy || form.code.length !== 6}>{busy ? t.creating : t.create} <Heart className="h-4 w-4 fill-current"/></Button><button type="button" className="text-button" onClick={()=>{setStage("details");setError("");}}>{t.back}</button></form></div>}
-      {stage === "ready" && <div className="stage-panel"><div className="ready-check"><Check/></div><span className="eyebrow">{form.creatorName} + {form.crushName}</span><h1>{t.ready}</h1><p className="subtitle">{t.readyBody}</p><div className="link-list"><div className={`link-card invitation-link-card ${copied ? "link-card-copied" : ""}`}><span>{t.invite}</span><code>{links.inviteUrl}</code><button onClick={copyInvite}><Copy/>{copied ? t.copied : t.copy}</button></div></div><div className="ready-actions"><a className={`primary-link result-link ${copied ? "" : "result-link-disabled"}`} href={copied ? links.manageUrl : undefined} aria-disabled={!copied}>{t.goResults} <Heart/></a>{!copied && <p className="tiny-note ready-hint">{t.resultsHint}</p>}<a className="preview-link" href={links.inviteUrl} target="_blank" rel="noreferrer">{t.preview} <Send/></a></div><button className="text-button" onClick={()=>{setStage("details");setCopied(false);setForm({creatorName:"",crushName:"",email:"",personalNote:"",code:""});setLinks({inviteUrl:"",manageUrl:""});}}>{t.again}</button></div>}
+      {stage === "ready" && <div className="stage-panel"><div className="ready-check"><Check/></div><span className="eyebrow">{form.creatorName} + {form.crushName}</span><h1>{t.ready}</h1><p className="subtitle">{t.readyBody}</p><div className="link-list"><div className={`link-card invitation-link-card ${copied ? "link-card-copied" : ""}`}><span>{t.invite}</span><code>{links.inviteUrl}</code><button onClick={copyInvite}><Copy/>{copied ? t.copied : t.copy}</button></div></div><div className="ready-actions"><a className={`primary-link result-link ${copied ? "" : "result-link-disabled"}`} href={copied ? links.manageUrl : undefined} aria-disabled={!copied}>{t.goResults} <Heart/></a>{!copied && <p className="tiny-note ready-hint">{t.resultsHint}</p>}<a className="preview-link" href={`${links.inviteUrl}?preview=1`} target="_blank" rel="noreferrer">{t.preview} <Send/></a></div><button className="text-button" onClick={()=>{setStage("details");setCopied(false);setForm({creatorName:"",crushName:"",email:"",personalNote:"",code:""});setLinks({inviteUrl:"",manageUrl:""});}}>{t.again}</button></div>}
     </section><p className="made-with">Made with courage <span>♥</span></p></main>;
 }
