@@ -53,6 +53,9 @@ html[lang="zh-CN"] h1 { line-height: 1.08; letter-spacing: -.035em; font-family:
 .no-zone { height: 56px; width: 100%; position: relative; display: grid; place-items: center; }
 .runaway-button { border: 0; background: transparent; padding: 8px 14px; color: #9f7981; font-size: .84rem; cursor: default; transition: transform .16s cubic-bezier(.2,.9,.4,1); white-space: nowrap; }
 .back-button { position: absolute; left: clamp(22px,4vw,42px); top: 26px; border: 0; background: none; display: flex; align-items: center; gap: 6px; color: #9a6873; font-weight: 700; cursor: pointer; }
+.creator-return-button { position: absolute; z-index: 9; left: clamp(18px,3vw,30px); top: 22px; display: inline-flex; align-items: center; gap: 5px; min-height: 34px; border: 1px solid #edc8cf; border-radius: 999px; padding: 6px 11px; background: rgba(255,255,255,.88); color: #8f3f55; font-size: .76rem; font-weight: 800; text-decoration: none; box-shadow: 0 6px 16px rgba(110,29,50,.06); }
+.creator-return-button:hover { border-color: #c96d85; background: #fff; }
+.back-button-below-owner { top: 70px; }
 .progress-row { position: absolute; left: 50%; top: 34px; transform: translateX(-50%); display: flex; gap: 7px; }
 .progress-row span { width: 31px; height: 5px; border-radius: 20px; background: #f1d8dc; transition: background .3s,width .3s; }
 .progress-row .progress-active { background: #b20838; width: 42px; }
@@ -122,8 +125,14 @@ html[lang="zh-CN"] h1 { line-height: 1.08; letter-spacing: -.035em; font-family:
 .link-card button { display: inline-flex; align-items: center; gap: 5px; border: 0; background: transparent; color: #a80732; cursor: pointer; font-weight: 800; }
 .link-card button svg { width: 15px; }
 .private-link { background: #fff3df; border-color: #eccd9a; }
+.link-card-copied { border-color: #bd526e; background: #fff0f3; box-shadow: inset 0 0 0 1px rgba(178,8,56,.08); }
 .primary-link { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 220px; padding: 16px 22px; border-radius: 999px; background: #a80732; color: white; text-decoration: none; font-weight: 800; box-shadow: 0 12px 26px rgba(168,7,50,.24); }
 .primary-link svg { width: 17px; }
+.ready-actions { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.result-link-disabled { opacity: .42; pointer-events: none; box-shadow: none; }
+.ready-hint { margin-top: 9px; }
+.preview-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; color: #925368; font-size: .86rem; font-weight: 800; text-underline-offset: 4px; }
+.preview-link svg { width: 15px; }
 .stage-panel > .text-button { margin-top: 17px; }
 .compact-card { min-height: 520px; display: grid; place-items: center; }
 .empty-state { max-width: 610px; margin: 35px auto 0; text-align: center; }
@@ -140,7 +149,8 @@ html[lang="zh-CN"] h1 { line-height: 1.08; letter-spacing: -.035em; font-family:
   .landing-content h1 { font-size: clamp(3rem,15vw,4.4rem); } .bear-wrap { height: 270px; margin-top: 6px; }
   .shock-content { min-height: 540px; } .shock-content h1 { font-size: clamp(3.2rem,15vw,4.7rem); }
   .shock-burst { width: 72px; height: 72px; right: -2%; top: -1%; font-size: .92rem; }
-  .back-button { top: 25px; left: 20px; } .progress-row { top: 34px; left: 50%; right: auto; transform: translateX(-50%); }
+  .back-button { top: 25px; left: 20px; } .back-button-below-owner { top: 66px; } .creator-return-button { left: 14px; top: 18px; padding-inline: 9px; }
+  .progress-row { top: 34px; left: 50%; right: auto; transform: translateX(-50%); }
   .progress-row span { width: 20px; } .progress-row .progress-active { width: 26px; }
   .step-content { padding-top: 0; } .date-time-grid { grid-template-columns: 1fr; margin-top: 25px; }
   .picker-panel { padding: 18px; } .choice-grid,.food-grid { grid-template-columns: 1fr; margin-top: 22px; }

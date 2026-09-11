@@ -70,7 +70,7 @@ const copy = {
     submit: "Submit", pickOne: "Pick at least one option to keep going.", confirmed: "Reservation confirmed",
     record: "Here’s our little plan, officially on the record.", date: "Date", time: "Time", backup: "Backup moments",
     plans: "Our plans", food: "Food shortlist", final: "I can’t wait to see you.", restart: "Make another reservation",
-    sendAnswers: "Send my answers ❤", sending: "Sending our little plan…", sent: "Sent! Your date request is on its way 💌",
+    sendAnswers: "All picked! ❤", sending: "Saving our little plan…", sent: "All set! Your date plan is saved 💌",
     sendFailed: "It didn’t send. Please try again.", made: "Made with a suspicious amount of courage", am: "AM", pm: "PM",
   },
   zh: {
@@ -86,7 +86,7 @@ const copy = {
     submit: "提交", pickOne: "至少选一个才可以继续哦。", confirmed: "约会预约成功",
     record: "这是我们说好的约会计划。", date: "日期", time: "时间", backup: "其他见面时间",
     plans: "约会安排", food: "想吃的东西", final: "想快点见到你！", restart: "再预约一次",
-    sendAnswers: "把答案发给我 ❤", sending: "正在发送我们的约会计划…", sent: "发送成功！我已经收到约会申请啦 💌",
+    sendAnswers: "我选好啦 ❤", sending: "正在保存我们的约会计划…", sent: "选好啦！约会计划已经保存 💌",
     sendFailed: "没有发送成功，请再试一次。", made: "鼓起了很多勇气才做出来", am: "上午", pm: "下午",
   },
 };
@@ -124,6 +124,7 @@ export default function DateInvitation({ invitationCode, creatorName, crushName,
   const [noPos, setNoPos] = useState({ x: 0, y: 0 });
   const [teaseIndex, setTeaseIndex] = useState(-1);
   const [sendStatus, setSendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [creatorManageUrl, setCreatorManageUrl] = useState("");
   const t = copy[language];
 
   const daysInMonth = useMemo(() => new Date(Number(year), Number(month), 0).getDate(), [month, year]);
@@ -172,6 +173,10 @@ export default function DateInvitation({ invitationCode, creatorName, crushName,
   }, [language]);
 
   useEffect(() => {
+    setCreatorManageUrl(window.localStorage.getItem(`date-invite-manage:${invitationCode}`) || "");
+  }, [invitationCode]);
+
+  useEffect(() => {
     const context = (document as Document & { modelContext?: { registerTool: (tool: unknown, options?: { signal?: AbortSignal }) => void | Promise<void> } }).modelContext;
     if (!context?.registerTool) return;
     const lifecycle = new AbortController();
@@ -215,11 +220,12 @@ export default function DateInvitation({ invitationCode, creatorName, crushName,
     <main className="app-shell">
       <div className="floating-heart heart-one">♥</div><div className="floating-heart heart-two">♥</div><div className="floating-heart heart-three">♥</div>
       <section className="invitation-card" aria-labelledby="page-title">
+        {creatorManageUrl && <a className="creator-return-button" href={creatorManageUrl}><ArrowLeft className="h-4 w-4" /> {language === "zh" ? "返回我的结果页" : "Back to my results"}</a>}
         <button className="language-toggle" onClick={() => setLanguage(language === "en" ? "zh" : "en")} aria-label={language === "en" ? "切换到中文" : "Switch to English"}>
           <Languages className="h-4 w-4" /><span className={language === "zh" ? "active-language" : ""}>中文</span><i>/</i><span className={language === "en" ? "active-language" : ""}>EN</span>
         </button>
         {step > 1 && step < 6 && <div className="progress-row" aria-label={language === "zh" ? `第 ${step - 1} 步，共 4 步` : `Step ${step - 1} of 4`}>{[1,2,3,4].map(item => <span key={item} className={item <= step - 1 ? "progress-active" : ""} />)}</div>}
-        {step > 0 && <button className="back-button" onClick={() => setStep(step - 1)} aria-label={t.back}><ArrowLeft className="h-4 w-4" /> {t.back}</button>}
+        {step > 0 && <button className={`back-button ${creatorManageUrl ? "back-button-below-owner" : ""}`} onClick={() => setStep(step - 1)} aria-label={t.back}><ArrowLeft className="h-4 w-4" /> {t.back}</button>}
 
         {step === 0 && <div className="landing-content">
           <span className="eyebrow"><Sparkles className="h-4 w-4" /> {t.tinyQuestion}</span>
