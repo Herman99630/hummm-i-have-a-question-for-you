@@ -14,7 +14,7 @@ const text = {
     eyebrow: "别犹豫，勇敢追爱！", title: "创建你的约会邀请", subtitle: "填好信息，获得一条只属于你们的链接。对方提交后，完整答案会自动发到你的邮箱。",
     creator: "你的名字", creatorPlaceholder: "比如：Herman", crush: "TA 的名字", crushPlaceholder: "比如：小可爱", email: "你的邮箱", emailHint: "验证码、邀请链接和最终报告都会发到这里。",
     note: "想对 TA 说的话（选填）", notePlaceholder: "悄悄写一句只给 TA 看的话…", sendCode: "发送验证码", sending: "正在发送…",
-    verifyTitle: "查看你的邮箱", verifyBody: "输入刚刚收到的六位验证码。它在 10 分钟内有效。", spamHint: "还没看到？记得检查垃圾邮件或广告邮件文件夹，验证码偶尔会躲进去。", code: "六位验证码", create: "创建专属邀请", creating: "正在创建…", back: "修改信息",
+    verifyTitle: "查看你的邮箱", verifyBody: "输入刚刚收到的六位验证码。它在 10 分钟内有效。", spamHint: "未收到验证码？请检查垃圾邮件。", code: "六位验证码", create: "创建专属邀请", creating: "正在创建…", back: "修改信息",
     ready: "邀请已经准备好啦！", readyBody: "先复制下面的邀请链接发给 TA，发完再回来进入你的私密结果页。", invite: "第一步 · 复制给 TA 的邀请链接", copy: "复制邀请链接", copied: "已复制，可以发给 TA 啦", preview: "先自己预览一下", goResults: "我已经发给 TA，进入我的结果页", resultsHint: "复制邀请链接后，就可以安全进入自己的结果页。", again: "再创建一个",
   },
   en: {
@@ -22,7 +22,7 @@ const text = {
     eyebrow: "A little courage goes a long way", title: "Create your date invitation", subtitle: "Make a private link for someone special. Their answers will be saved and emailed directly to you.",
     creator: "Your name", creatorPlaceholder: "e.g. Herman", crush: "Their name", crushPlaceholder: "e.g. Cutie", email: "Your email", emailHint: "Your code, links, and final report will be sent here.",
     note: "A note for them (optional)", notePlaceholder: "Write something only they will see…", sendCode: "Send verification code", sending: "Sending…",
-    verifyTitle: "Check your email", verifyBody: "Enter the six-digit code we just sent. It is valid for 10 minutes.", spamHint: "Can’t find it? Check your spam or promotions folder—the code sometimes lands there.", code: "Six-digit code", create: "Create my invitation", creating: "Creating…", back: "Edit details",
+    verifyTitle: "Check your email", verifyBody: "Enter the six-digit code we just sent. It is valid for 10 minutes.", spamHint: "Didn’t receive the code? Check your spam folder.", code: "Six-digit code", create: "Create my invitation", creating: "Creating…", back: "Edit details",
     ready: "Your invitation is ready!", readyBody: "First copy the invitation and send it to your date. Then come back here to open your private results page.", invite: "Step 1 · Invitation link for them", copy: "Copy invitation", copied: "Copied—ready to send", preview: "Preview the invitation", goResults: "I've sent it—open my results page", resultsHint: "Copy the invitation first, then you can safely open your own results page.", again: "Create another",
   },
 };
