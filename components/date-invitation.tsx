@@ -30,12 +30,12 @@ const foods = [
 
 const pageTitles = [
   "Can we have a date?", "Wait… did you just say YES?!", "When can I see you?",
-  "What other time can I meet you?", "What activities do you prefer?", "What should we eat tonight?", "It's a date!",
+  "What other time can I meet you?", "What activities do you prefer?", "What should we eat tonight?", "One last look",
 ];
 
 const pageTitlesZh = [
   "可以和我一起约会吗？", "等一下！你真的点了愿意吗？你真的愿意吗？！", "所以什么时候能见到你？",
-  "还有什么时间可以见到你？", "我们一起去干什么？", "想吃什么呀？", "想快点见到你！",
+  "还有什么时间可以见到你？", "我们一起去干什么？", "想吃什么呀？", "最后确认一下吧",
 ];
 
 const timeZh: Record<string, string> = {
@@ -67,11 +67,11 @@ const copy = {
     justInCase: "02 · Just in case", multi: "You can always select more than one option.",
     funPart: "03 · The fun part", activitySub: "Pick every idea that sounds like us.",
     important: "04 · Most important question", foodSub: "There are no wrong answers. Except maybe “I’m not hungry.”",
-    submit: "Submit", pickOne: "Pick at least one option to keep going.", confirmed: "Reservation confirmed",
+    submit: "Submit", pickOne: "Pick at least one option to keep going.", confirmed: "Your date plan",
     record: "Here’s our little plan, officially on the record.", date: "Date", time: "Time", backup: "Backup moments",
     plans: "Our plans", food: "Food shortlist", final: "I can’t wait to see you.", restart: "Make another reservation",
     sendAnswers: "All picked! ❤", sending: "Saving our little plan…", sent: "All set! Your date plan is saved 💌",
-    sendFailed: "It didn’t send. Please try again.", made: "Made with a suspicious amount of courage", am: "AM", pm: "PM",
+    sendFailed: "It didn’t send. Please try again.", finalSub: "Your choices are saved and your little date plan is on its way. 💌", finalClose: "See you soon ❤", made: "Made with a suspicious amount of courage", am: "AM", pm: "PM",
   },
   zh: {
     back: "返回", tinyQuestion: "有一个小问题想问你", homeSub: "装作不在意，其实很期待", yes: "愿意",
@@ -83,11 +83,11 @@ const copy = {
     justInCase: "02 · 以防我们忍不住想早一点见面", multi: "可以多选哦。",
     funPart: "03 · 约会的快乐环节", activitySub: "喜欢的都可以选。",
     important: "04 · 最重要的问题", foodSub: "没有错误答案，除了“我不饿”。",
-    submit: "提交", pickOne: "至少选一个才可以继续哦。", confirmed: "约会预约成功",
+    submit: "提交", pickOne: "至少选一个才可以继续哦。", confirmed: "约会计划预览",
     record: "这是我们说好的约会计划。", date: "日期", time: "时间", backup: "其他见面时间",
     plans: "约会安排", food: "想吃的东西", final: "想快点见到你！", restart: "再预约一次",
     sendAnswers: "我选好啦 ❤", sending: "正在保存我们的约会计划…", sent: "选好啦！约会计划已经保存 💌",
-    sendFailed: "没有发送成功，请再试一次。", made: "鼓起了很多勇气才做出来", am: "上午", pm: "下午",
+    sendFailed: "没有发送成功，请再试一次。", finalSub: "你的选择已经保存好，约会计划也悄悄送达啦。💌", finalClose: "好呀 ❤", made: "鼓起了很多勇气才做出来", am: "上午", pm: "下午",
   },
 };
 
@@ -124,6 +124,7 @@ export default function DateInvitation({ invitationCode, creatorName, crushName,
   const [noPos, setNoPos] = useState({ x: 0, y: 0 });
   const [teaseIndex, setTeaseIndex] = useState(-1);
   const [sendStatus, setSendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [showFinal, setShowFinal] = useState(false);
   const [creatorManageUrl, setCreatorManageUrl] = useState("");
   const t = copy[language];
 
@@ -162,6 +163,7 @@ export default function DateInvitation({ invitationCode, creatorName, crushName,
       });
       if (!response.ok) throw new Error((await response.json()).error || "Submission failed");
       setSendStatus("sent");
+      setShowFinal(true);
     } catch {
       setSendStatus("error");
     }
@@ -279,16 +281,18 @@ export default function DateInvitation({ invitationCode, creatorName, crushName,
         {step === 6 && <div className="summary-content">
           <span className="eyebrow"><Check className="h-4 w-4" /> {t.confirmed}</span><h1 id="page-title">{language === "zh" ? pageTitlesZh[step] : pageTitles[step]}</h1><p className="subtitle">{t.record}</p>
           <div className="summary-card"><div><span>{t.date}</span><strong>{selectedDate}</strong></div><div><span>{t.time}</span><strong>{hour}:{minute} {period === "AM" ? t.am : t.pm}</strong></div><div><span>{t.backup}</span><strong>{times.map(value => language === "zh" ? timeZh[value] : value).join(" · ")}</strong></div><div><span>{t.plans}</span><strong>{selectedActivities.map(value => language === "zh" ? activityZh[value] : value).join(" · ")}</strong></div><div><span>{t.food}</span><strong>{selectedFoods.map(value => language === "zh" ? foodZh[value] : value).join(" · ")}</strong></div></div>
-          <div className="final-message"><Heart className="h-6 w-6 fill-current" /> {t.final}</div>
-          <Button className="primary-button" size="lg" disabled={sendStatus === "sending" || sendStatus === "sent"} onClick={sendAnswers}>
+          <Button className="primary-button submit-choice-button" size="lg" disabled={sendStatus === "sending" || sendStatus === "sent"} onClick={sendAnswers}>
             {sendStatus === "sending" ? t.sending : sendStatus === "sent" ? t.sent : t.sendAnswers}
           </Button>
           {sendStatus === "error" && <p className="tiny-note">{t.sendFailed}</p>}
-          {sendStatus !== "sent" && <button className="start-over" onClick={()=>{ setSendStatus("idle"); setStep(0); }}>{t.restart}</button>}
+          {sendStatus !== "sent" && <button className="start-over" onClick={()=>{ setSendStatus("idle"); setShowFinal(false); setStep(0); }}>{t.restart}</button>}
         </div>}
 
         {step > 1 && step < 6 && <div className="footer-action"><Button className="primary-button" size="lg" disabled={!canContinue} onClick={()=>setStep(step+1)}>{step===2?t.confirm:t.submit} <ArrowRight className="h-4 w-4" /></Button>{!canContinue && <p>{t.pickOne}</p>}</div>}
       </section>
+      {showFinal && <div className="final-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="final-modal-title">
+        <div className="final-modal-card"><div className="modal-heart-cloud" aria-hidden="true"><span>♥</span><span>♥</span><span>♥</span></div><div className="ready-check"><Heart className="fill-current" /></div><span className="eyebrow">{t.confirmed}</span><h2 id="final-modal-title">{t.final}</h2><p>{t.finalSub}</p><Button className="primary-button" size="lg" onClick={() => setShowFinal(false)}>{t.finalClose}</Button></div>
+      </div>}
       <p className="made-with">{t.made} <span>♥</span></p>
     </main>
   );
