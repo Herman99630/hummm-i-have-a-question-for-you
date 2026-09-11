@@ -45,6 +45,7 @@ html[lang="zh-CN"] h1 { line-height: 1.08; letter-spacing: -.035em; font-family:
 .shock-yes { min-width: 250px; font-size: 1.05rem; }
 .bear-wrap { width: min(330px,70vw); height: 310px; position: relative; display: grid; place-items: center; margin: 2px auto -8px; }
 .bear-wrap img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 16px 18px rgba(126,34,52,.14)); animation: bearFloat 4s ease-in-out infinite; }
+.couple-wrap { width: min(390px,82vw); }
 .love-orbit { position: absolute; z-index: 3; right: 8%; top: 12%; font: 30px Georgia,serif; color: #e54b72; animation: pulse 1.8s ease-in-out infinite; }
 .landing-actions { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%; }
 .primary-button { min-width: 220px; height: 54px; border-radius: 999px !important; background: #a80732 !important; color: white !important; font-weight: 800; letter-spacing: .025em; box-shadow: 0 12px 26px rgba(168,7,50,.24); transition: transform .2s ease,box-shadow .2s ease; }

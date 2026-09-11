@@ -243,7 +243,7 @@ export default function DateInvitation({ invitationCode, creatorName, crushName,
           <h1 id="page-title">{language === "zh" ? `${crushName}，可以和我一起约会吗？` : `${crushName}, can we have a date?`}</h1>
           <p className="subtitle">{t.homeSub}</p>
           {personalNote && <p className="personal-note">“{personalNote}”<span>— {creatorName}</span></p>}
-          <div className="bear-wrap"><span className="love-orbit">♥</span><Image src="/love-bear.png" alt="A cute bear holding a red heart" width={410} height={410} priority /></div>
+          <div className="bear-wrap couple-wrap"><span className="love-orbit">♥</span><Image src="/hello-kitty-couple.webp" alt="Hello Kitty and Dear Daniel holding a red heart" width={410} height={410} priority /></div>
           <div className="landing-actions">
             <Button className="primary-button" size="lg" onClick={() => setStep(1)}>{t.yes} <Heart className="h-4 w-4 fill-current" /></Button>
             <div className="no-zone"><button className="runaway-button" style={{ transform: `translate(${noPos.x}px, ${noPos.y}px)` }} onMouseEnter={dodgeNo} onPointerDown={event => { event.preventDefault(); dodgeNo(); }} onFocus={dodgeNo} tabIndex={-1} aria-hidden="true">{teaseIndex < 0 ? t.no : t.noLines[teaseIndex]}</button></div>
