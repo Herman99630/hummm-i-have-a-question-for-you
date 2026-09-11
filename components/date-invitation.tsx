@@ -71,7 +71,7 @@ const copy = {
     record: "Here’s our little plan, officially on the record.", date: "Date", time: "Time", backup: "Backup moments",
     plans: "Our plans", food: "Food shortlist", final: "I can’t wait to see you.", restart: "Make another reservation",
     sendAnswers: "All picked! ❤", sending: "Saving our little plan…", sent: "All set! Your date plan is saved 💌",
-    sendFailed: "It didn’t send. Please try again.", previewBadge: "Creator preview · Answers will not be recorded", previewFinish: "Finish preview—back to results", finalSub: "Your choices are saved and your little date plan is on its way. 💌", finalClose: "See you soon ❤", made: "Made with a suspicious amount of courage", am: "AM", pm: "PM",
+    sendFailed: "It didn’t send. Please try again.", previewBadge: "Preview · Answers aren’t recorded", previewFinish: "Finish preview—back to results", finalSub: "Your choices are saved and your little date plan is on its way. 💌", finalClose: "See you soon ❤", made: "Made with a suspicious amount of courage", am: "AM", pm: "PM",
   },
   zh: {
     back: "返回", tinyQuestion: "有一个小问题想问你", homeSub: "装作不在意，其实很期待", yes: "愿意",
@@ -87,7 +87,7 @@ const copy = {
     record: "这是我们说好的约会计划。", date: "日期", time: "时间", backup: "其他见面时间",
     plans: "约会安排", food: "想吃的东西", final: "想快点见到你！", restart: "再预约一次",
     sendAnswers: "我选好啦 ❤", sending: "正在保存我们的约会计划…", sent: "选好啦！约会计划已经保存 💌",
-    sendFailed: "没有发送成功，请再试一次。", previewBadge: "创建者预览模式 · 答案不会被记录", previewFinish: "预览完成，返回结果页", finalSub: "你的选择已经保存好，约会计划也悄悄送达啦。💌", finalClose: "好呀 ❤", made: "鼓起了很多勇气才做出来", am: "上午", pm: "下午",
+    sendFailed: "没有发送成功，请再试一次。", previewBadge: "预览模式 · 不会记录答案", previewFinish: "预览完成，返回结果页", finalSub: "你的选择已经保存好，约会计划也悄悄送达啦。💌", finalClose: "好呀 ❤", made: "鼓起了很多勇气才做出来", am: "上午", pm: "下午",
   },
 };
 
@@ -230,8 +230,8 @@ export default function DateInvitation({ invitationCode, creatorName, crushName,
     <main className="app-shell">
       <div className="floating-heart heart-one">♥</div><div className="floating-heart heart-two">♥</div><div className="floating-heart heart-three">♥</div>
       <section className="invitation-card" aria-labelledby="page-title">
-        {creatorManageUrl && <a className="creator-return-button" href={creatorManageUrl}><ArrowLeft className="h-4 w-4" /> {language === "zh" ? "返回我的结果页" : "Back to my results"}</a>}
-        {previewMode && <div className="preview-mode-badge">{t.previewBadge}</div>}
+        {creatorManageUrl && <a className="creator-return-button" href={creatorManageUrl}><ArrowLeft className="h-4 w-4" /><span><strong>{language === "zh" ? "返回我的结果页" : "Back to my results"}</strong>{previewMode && <small>{t.previewBadge}</small>}</span></a>}
+        {previewMode && !creatorManageUrl && <div className="creator-return-button preview-only-badge"><span><strong>{t.previewBadge}</strong></span></div>}
         <button className="language-toggle" onClick={() => setLanguage(language === "en" ? "zh" : "en")} aria-label={language === "en" ? "切换到中文" : "Switch to English"}>
           <Languages className="h-4 w-4" /><span className={language === "zh" ? "active-language" : ""}>中文</span><i>/</i><span className={language === "en" ? "active-language" : ""}>EN</span>
         </button>
