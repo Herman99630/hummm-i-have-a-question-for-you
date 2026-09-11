@@ -140,6 +140,7 @@ html[lang="zh-CN"] .creator-cover-copy h1 { font-family: "PingFang SC","Hiragino
 .form-back { align-self: flex-start; }
 .stage-panel { min-height: 480px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .stage-panel .subtitle { max-width: 610px; }
+.spam-hint { max-width: 520px; margin: 16px auto 0; border: 1px solid rgba(218,165,75,.36); border-radius: 13px; padding: 10px 13px; background: rgba(255,241,205,.56); color: #815b23; font-size: .82rem; font-weight: 700; line-height: 1.5; }
 .stage-panel .creator-form { width: min(100%,430px); }
 .mail-orbit { display: grid; place-items: center; width: 95px; height: 95px; margin-bottom: 18px; border-radius: 50%; background: #ffe4e9; font-size: 2.5rem; box-shadow: 0 15px 35px rgba(147,34,65,.12); animation: bearFloat 3.5s ease-in-out infinite; }
 .verify-form .creator-submit { align-self: stretch; }
